@@ -1,0 +1,13 @@
+CREATE TABLE technicians (id VARCHAR(80) PRIMARY KEY, email VARCHAR(200) NOT NULL UNIQUE, name VARCHAR(200) NOT NULL, password_hash VARCHAR(100) NOT NULL);
+CREATE TABLE assets (id VARCHAR(80) PRIMARY KEY, payload TEXT NOT NULL);
+CREATE TABLE templates (id VARCHAR(80) PRIMARY KEY, payload TEXT NOT NULL);
+CREATE TABLE work_orders (id VARCHAR(80) PRIMARY KEY, owner VARCHAR(80) NOT NULL REFERENCES technicians(id), asset_id VARCHAR(80) NOT NULL REFERENCES assets(id), template_id VARCHAR(80) NOT NULL REFERENCES templates(id), payload TEXT NOT NULL);
+CREATE INDEX work_owner_idx ON work_orders(owner);
+CREATE TABLE inspections (id VARCHAR(80) PRIMARY KEY, owner VARCHAR(80) NOT NULL REFERENCES technicians(id), work_order_id VARCHAR(80) NOT NULL REFERENCES work_orders(id), version INTEGER NOT NULL, payload TEXT NOT NULL);
+CREATE INDEX inspection_owner_idx ON inspections(owner);
+CREATE TABLE sessions (token_hash VARCHAR(64) PRIMARY KEY, owner VARCHAR(80) NOT NULL REFERENCES technicians(id), expires_at BIGINT NOT NULL);
+CREATE TABLE operation_receipts (id VARCHAR(80) PRIMARY KEY, owner VARCHAR(80) NOT NULL REFERENCES technicians(id), request_hash VARCHAR(64) NOT NULL, reply TEXT NOT NULL);
+CREATE TABLE attachments (id VARCHAR(80) PRIMARY KEY, owner VARCHAR(80) NOT NULL REFERENCES technicians(id), inspection_id VARCHAR(80) NOT NULL, work_order_id VARCHAR(80) NOT NULL REFERENCES work_orders(id), content_hash VARCHAR(64) NOT NULL, content TEXT NOT NULL);
+CREATE INDEX attachment_inspection_idx ON attachments(inspection_id);
+CREATE TABLE audit_events (id VARCHAR(80) PRIMARY KEY, owner VARCHAR(80) NOT NULL REFERENCES technicians(id), inspection_id VARCHAR(80), message TEXT NOT NULL, created_at BIGINT NOT NULL);
+CREATE INDEX audit_owner_idx ON audit_events(owner);

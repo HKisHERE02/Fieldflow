@@ -1,0 +1,1 @@
+<resources><style name="Theme.FieldFlow" parent="android:style/Theme.Material.Light.NoActionBar"><item name="android:fontFamily">sans</item><item name="android:windowLightStatusBar">false</item><item name="android:statusBarColor">#101C2D</item></style></resources>
